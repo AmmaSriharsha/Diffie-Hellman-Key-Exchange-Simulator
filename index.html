@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="An interactive Diffie-Hellman key exchange simulator." />
+  <title>Diffie–Hellman Key Exchange Simulator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-icon">↔</span> CryptoLab</a>
+    <span class="tag">INTERACTIVE SIMULATOR</span>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <p class="eyebrow">PUBLIC-KEY CRYPTOGRAPHY</p>
+      <h1>Diffie–Hellman <span>Key Exchange</span></h1>
+      <p class="intro">See how Alice and Bob establish the same secret key over a public channel—without ever sending their private keys.</p>
+    </section>
+
+    <section class="parameters panel">
+      <div class="section-heading">
+        <div><p class="eyebrow">01 / SETUP</p><h2>Public parameters</h2></div>
+        <button id="resetBtn" class="text-button" type="button">Reset example ↺</button>
+      </div>
+      <p class="muted">These values are public. Both participants know them.</p>
+      <div class="input-grid">
+        <label>Prime number (p)<input id="prime" type="number" min="3" step="1" value="23"></label>
+        <label>Generator (g)<input id="generator" type="number" min="2" step="1" value="5"></label>
+      </div>
+      <p class="hint">Demo values: p = 23 and g = 5. Use small values for learning only.</p>
+    </section>
+
+    <section class="people-grid">
+      <article class="person panel alice">
+        <div class="person-title"><div class="avatar">A</div><div><p class="eyebrow">PARTICIPANT 01</p><h2>Alice</h2></div></div>
+        <label>Private key (a)<input id="alicePrivate" type="number" min="1" value="6"></label>
+        <div class="result-box"><span>Public key sent to Bob</span><strong id="alicePublic">—</strong><small>A = g<sup>a</sup> mod p</small></div>
+      </article>
+      <article class="person panel bob">
+        <div class="person-title"><div class="avatar">B</div><div><p class="eyebrow">PARTICIPANT 02</p><h2>Bob</h2></div></div>
+        <label>Private key (b)<input id="bobPrivate" type="number" min="1" value="15"></label>
+        <div class="result-box"><span>Public key sent to Alice</span><strong id="bobPublic">—</strong><small>B = g<sup>b</sup> mod p</small></div>
+      </article>
+    </section>
+
+    <div class="action-row">
+      <button id="calculateBtn" class="primary-button" type="button">Generate shared secret <span>→</span></button>
+      <p id="status" class="status" aria-live="polite">Ready to calculate</p>
+    </div>
+
+    <section class="exchange panel">
+      <div class="section-heading"><div><p class="eyebrow">02 / EXCHANGE</p><h2>Public communication channel</h2></div><span class="public-badge">PUBLIC</span></div>
+      <div class="exchange-flow">
+        <div class="node"><div class="avatar">A</div><strong>Alice</strong></div>
+        <div class="arrow-line"><span id="alicePacket">A = —</span><i>⟶</i></div>
+        <div class="channel"><span>⇄</span><strong>Open channel</strong><small>Public keys only</small></div>
+        <div class="arrow-line reverse"><span id="bobPacket">B = —</span><i>⟵</i></div>
+        <div class="node"><div class="avatar">B</div><strong>Bob</strong></div>
+      </div>
+      <p class="hint center">An eavesdropper can see p, g, A and B—but not the private keys a and b.</p>
+    </section>
+
+    <section class="secret-grid">
+      <article class="panel secret-card">
+        <p class="eyebrow">03 / ALICE COMPUTES</p><h2>Alice's shared secret</h2>
+        <p class="formula">K = B<sup>a</sup> mod p</p>
+        <div id="aliceSecret" class="secret-value">?</div>
+        <p id="aliceWork" class="muted">Waiting for calculation…</p>
+      </article>
+      <article class="panel secret-card">
+        <p class="eyebrow">03 / BOB COMPUTES</p><h2>Bob's shared secret</h2>
+        <p class="formula">K = A<sup>b</sup> mod p</p>
+        <div id="bobSecret" class="secret-value">?</div>
+        <p id="bobWork" class="muted">Waiting for calculation…</p>
+      </article>
+    </section>
+
+    <section id="success" class="success panel" hidden>
+      <div class="check">✓</div><div><h2>Shared secret established!</h2><p>Alice and Bob independently calculated the same key. The secret itself was never transmitted.</p></div>
+    </section>
+
+    <section class="explanation panel">
+      <p class="eyebrow">THE IDEA</p><h2>Why do both sides get the same key?</h2>
+      <p>Using modular arithmetic, Alice calculates <code>B<sup>a</sup> mod p</code> and Bob calculates <code>A<sup>b</sup> mod p</code>.</p>
+      <p>Since <code>B = g<sup>b</sup> mod p</code> and <code>A = g<sup>a</sup> mod p</code>, both results equal <code>g<sup>ab</sup> mod p</code>.</p>
+      <div class="warning"><strong>Learning note:</strong> This simulator uses small numbers so the arithmetic is visible. Real systems use carefully selected large groups and authenticated key exchange. Basic Diffie–Hellman by itself does not prevent man-in-the-middle attacks.</div>
+    </section>
+    <footer>CryptoLab · Diffie–Hellman educational simulator · Built with HTML, CSS and JavaScript</footer>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
